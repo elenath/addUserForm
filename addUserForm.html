@@ -1,10 +1,10 @@
+
 <!DOCTYPE html>
 <html>
 <head>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   
   <script type='text/javascript' src='//code.jquery.com/jquery-1.9.1.js'></script>
-  
   
   <link rel="stylesheet" type="text/css" href="/css/result-light.css">
   
@@ -18,75 +18,109 @@
   
 
 
+
 <script type='text/javascript'>//<![CDATA[
 
-var userList = []
+function validateForm() { // funkcja validacji wpisanych danych do formularza
+    console.log("validateForm is on");
 
-var me ={
-    name: 'Marek',
-    surname: 'Kudyba',
-    phone: 123123,
-    heigth: 189,
-    tattoo: false
-}
-userList.push(me);
-
-
-    function validateForm() {
-        console.log("validateForm is on");
-
-        // Validate name
-        var name = $("#fname").val();
-        if (name == "" || name == null) {
-            console.log("name");
-            alert("Podaj proszę imię");
-            return false;
-        }
-
-        // Validate surname
-        var surname = $("#fsurname").val();
-        if (surname == "" || surname == null) {
-            console.log("surname");
-            alert("Podaj proszę nazwisko");
-            return false;
-        }
-        // Validate phone
-        var phone = $("#fphone").val();
-        if ($.isNumeric(phone) == false) {
-            console.log("phone");
-            alert("Podaj proszę numer telefonu");
-            return false;
-        }
-
-        // Validate heigth
-        var heigth = $("#fheigth").val();
-        if ($.isNumeric(heigth) == false) {
-            console.log("heigth");
-            alert("Podaj proszę wzrost");
-            return false;
-        }
-
-        // Validate tattoo
-        var tattoo = $('input[name="tattoo"]:checked', '#addUser').val();
-        console.log(tattoo);
-        if (tattoo == "" || tattoo == null) {
-            console.log("tattoo");
-            alert("Wybierz prosze opcję");
-            return false;
-        }
-        var tmp = {
-            name: name,
-            surname: surname,
-            phone: phone,
-            heigth: heigth,
-            tattoo: tattoo
-        }
-        userList.push(tmp);
-        
-        for( var i = 0; i < userList.length; i++){
-        	console.log(userList[i]);
-        }
+    // Validate name
+    var name = $("#fname").val();
+    if (name == "" || name == null) {
+        console.log("name");
+        alert("Podaj proszę imię");
         return false;
+    }
+
+    // Validate surname
+    var surname = $("#fsurname").val();
+    if (surname == "" || surname == null) {
+        console.log("surname");
+        alert("Podaj proszę nazwisko");
+        return false;
+    }
+    // Validate phone
+    var phone = $("#fphone").val();
+    if ($.isNumeric(phone) == false) {
+        console.log("phone");
+        alert("Podaj proszę numer telefonu");
+        return false;
+    }
+
+    // Validate heigth
+    var heigth = $("#fheigth").val();
+    if ($.isNumeric(heigth) == false) {
+        console.log("heigth");
+        alert("Podaj proszę wzrost");
+        return false;
+    }
+
+    // Validate tattoo
+    var tattoo = $('input[name="tattoo"]:checked', '#addUser').val();
+    // console.log(tattoo);
+    if (tattoo == "" || tattoo == null) {
+        console.log("tattoo");
+        alert("Wybierz prosze opcję");
+        return false;
+    }
+    var tmp = {
+        name: name,
+        surname: surname,
+        phone: phone,
+        heigth: heigth,
+        tattoo: tattoo
+    }
+    userList.push(tmp); // dodawanie użytkownika do listy
+
+    var list = "";
+    for (var i = 0; i < userList.length; i++) {
+        list += userList[i];
+        console.log(userList[i]);
+    }
+    alert("Użytkownik został dodany do listy");
+    document.getElementById("addUser").reset(); // czyszczenie danych formularza
+    showList(); // odświerzanie listy
+    return false;
+}
+
+var userList = [] // tworzenie listy użytkowników
+
+window.onload = function () { // ładowanie kodu po uruchomieniu dokumentu
+    var me = { // tworzenie testowych użytkowniów
+        name: 'Marek',
+        surname: 'Kudyba',
+        phone: 123123,
+        heigth: 189,
+        tattoo: false
+    }
+    var me2 = {
+        name: 'Szymon',
+        surname: 'Koc',
+        phone: 156745,
+        heigth: 200,
+        tattoo: true
+    }
+    userList.push(me);
+    userList.push(me2);
+    showList();
+    //document.getElementById('list').innerHTML = JSON.stringify(userList, null, '\t');
+}
+
+    function showList() { // tworzenie tabeli do wyświetlania listy użytkowników
+        var table = document.getElementById("userListTable");
+        document.getElementById("userListTable").deleteTHead();
+        var header = table.createTHead();
+
+        for (var i = 0; i < userList.length; i++) {
+            var row = header.insertRow(0);
+            var cell = row.insertCell(0);
+            var tattooTmp = "";
+            if (userList[i].tattoo == false) tattooTmp = "Nie";
+            else tattooTmp = "Tak";
+            var data = "";
+            data = userList[i].name + " " + userList[i].surname + ", Wzrost: " + userList[i].heigth + ", Telefon: " + userList[i].phone + ", Tatuaż: " + tattooTmp; // zczytywanie danych użytkownika w przystępnej postaci
+            cell.innerHTML = (data);
+        }
     }
 //]]> 
 
@@ -95,40 +129,40 @@ userList.push(me);
 </head>
 <body>
   <form id="addUser" name="addUser" method="post" onsubmit="return validateForm();">
-    <div class="col-md-11">
+    <div class="col-md-5">
         <div class="form-group">
             <label for="name" class="col-sm-2 control-label">Imię</label>
-            <div class="col-sm-11">
+            <div class="col-sm-12">
                 <input type="text" name="name" id="fname" placeholder="Imię" />
             </div>
         </div>
         <div class="form-group">
             <label for="surname" class="col-sm-2 control-label">Nazwisko</label>
-            <div class="col-sm-11">
+            <div class="col-sm-12">
                 <input type="text" name="surname" id="fsurname" placeholder="Nazwisko" />
             </div>
         </div>
         <div class="form-group">
             <label for="phone" class="col-sm-2 control-label">Numer Telefonu</label>
-            <div class="col-sm-11">
+            <div class="col-sm-12">
                 <input type="text" name="phone" id="fphone" placeholder="Numer telefonu" />
             </div>
         </div>
         <div class="form-group">
             <label for="heigth" class="col-sm-2 control-label">Wzrost</label>
-            <div class="col-sm-11">
+            <div class="col-sm-12">
                 <input type="text" name="heigth" id="fheigth" placeholder="Wzrost" />
             </div>
         </div>
         <div class="form-group">
             <label for="exampleInputFile" class="col-sm-2 control-label">Czy posiada tatuaż?</label>
-            <div class="col-sm-11">Tak
+            <div class="col-sm-12">Tak
                 <input type="radio" name="tattoo" value="Yes" />Nie
                 <input type="radio" name="tattoo" value="No" />
             </div>
         </div>
     </div>
-    <div class="col-md-11">
+    <div class="col-md-12">
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-2">
                 <input type="submit" name="Submit" value="Dodaj" />
@@ -137,8 +171,14 @@ userList.push(me);
     </div>
 </form>
 
-<div id="list"> </div>
+<div class="col-md-7">
+    <h2 class="col-sm-12"> Lista użytkowników </h2>
+<div class="col-sm-offset-1 col-sm-7">
+    <table class="table table-bordered" id="userListTable"></table>
+    </div>
+</div>
   
 </body>
 
 </html>
+
